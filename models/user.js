@@ -39,7 +39,8 @@ const userschema = mongoose.Schema({
 
 const User = mongoose.model("users",userschema)
 
-//export default dana ewa hama welama Capital letter ekakin patn gnn object ekk nisa 
+//export default dana ewa hama wel
+// ama Capital letter ekakin patn gnn object ekk nisa 
 // anith than wala reuse weddi confusion ekak wenwa ekai prashne wela thibbe 
 // user, product, use krnn epa
 // User, Product wage user krnna
