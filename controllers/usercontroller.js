@@ -9,6 +9,24 @@ export function creatuser(req, res) {
 
     const newUserData = (req.body)
 
+    if(newUserData.type =="admin"){
+        if(req.user==null ){
+            res.json({
+                message:"please login as administrator to create admin accounts"
+            })
+            return
+            
+        }
+        if(req.user.type!="admin"){
+            if(req.user==null ){
+                res.json({
+                    message:"please login as administrator to create admin accounts"
+                })
+                return
+            }
+        }
+    }
+
     newUserData.password = bcrypt.hashSync(newUserData.password, 10)
 
 
@@ -25,7 +43,7 @@ export function creatuser(req, res) {
         })
     })
 
-}
+    }
 export function loginUser(req, res) {
     User.find({ email: req.body.email }).then(
         (Users)=>{
