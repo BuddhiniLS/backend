@@ -32,6 +32,7 @@ export async function createorder(req,res){
         }
 
         const neworderData=req.body
+
 const newProductArry=[]
 for(let i=0;i<neworderData.orderedItem.length;i++){
 
@@ -44,18 +45,28 @@ for(let i=0;i<neworderData.orderedItem.length;i++){
         })
         return
     }
+
+    newProductArry[i]={
+    name:product.productName,
+    price:product.price,
+    quantity:neworderData.orderedItem[i].quantity,
+    Image:product.Images[0]
+
+    }
 }
-consol.log(product)
+
+consol.log(newProductArry)
+neworderData.orderedItem=newProductArry
 
 
-      // neworderData.orderId=orderId
-      // neworderData.email=req.user.email
+       neworderData.orderId=orderId
+       neworderData.email=req.user.email
 
-//const order = new order(neworderData)
-//await order.save()
-//res.json({
-    //message:"order created"
-//})
+const order = new order(neworderData)
+await order.save()
+res.json({
+    message:"order created"
+})
 
 
     }catch(error){
