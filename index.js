@@ -2,9 +2,16 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
  
-import productRouter from './Router/productRouter.js';
+
 import userRouter from './Router/userRouter.js';
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import productRouter from './Router/productRouter.js';
+import product from './models/product.js';
+import orderRouter from './Router/orderRouter.js';
+  
+
+dotenv.config()
 
 const app = express();
 
@@ -16,7 +23,7 @@ app.use((req, res, next) => {
     console.log(token);
 
     if(token!=null){
-        jwt.verify(token,"cbc-secret-key 7973",(error,decoded)=>{
+        jwt.verify(token,process.env.SECRET,(error,decoded)=>{
             if(!error){
                 
                 req.user = decoded
@@ -29,7 +36,7 @@ app.use((req, res, next) => {
 });
 
 // MongoDB connection URL (use environment variables for sensitive data)
-const mongoUrl = "mongodb+srv://admin:123@cluster0.n37yk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const mongoUrl = process.env.MONGO_DB_URI
 
 // Connecting to MongoDB
 mongoose.connect(mongoUrl, {})
@@ -37,13 +44,14 @@ mongoose.connect(mongoUrl, {})
         console.log("Database connected successfully");
     })
     .catch(err => {
-        console.error("Database connection error:", Error);
+        console.error("Database connection error:", err);
     });
-
 // Corrected routes
 
-app.use("/api/products", productRouter);
+
 app.use("/api/users", userRouter)
+app.use("/api/products",productRouter)
+app.use("/api/orders",orderRouter)
 
 // Start the server
 const PORT = process.env.PORT || 5000;
