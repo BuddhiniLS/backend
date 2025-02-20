@@ -9,6 +9,7 @@ import dotenv from "dotenv";
 import productRouter from './Router/productRouter.js';
 import product from './models/product.js';
 import orderRouter from './Router/orderRouter.js';
+import cors from "cors";
   
 
 dotenv.config()
@@ -37,6 +38,10 @@ app.use((req, res, next) => {
 
 // MongoDB connection URL (use environment variables for sensitive data)
 const mongoUrl = process.env.MONGO_DB_URI
+
+
+app.use(cors())
+
 
 // Connecting to MongoDB
 mongoose.connect(mongoUrl, {})
