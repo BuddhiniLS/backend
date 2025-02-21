@@ -1,85 +1,32 @@
-import product from "../Models/product.js";
+import product from "../models/product.js";
 
-export function getProduct(req, res) {
+import { isAdmin } from "./usercontroller.js";
 
-    product.find().then(
-        (productList) => {
-            res.json({
-                list: productList
+export function creatproduct (req,res){
 
-            })
-        }
-
-    ).catch((error) => {
+    if(!isAdmin(req)){
         res.json({
-            message: "Error"
+            message:"please iogin as administrator to add product"
+        })
 
+        return
+    }
+    const newProductData=req.body
+
+    const product=new product(newProductData)
+    product.save().then(()=>{
+        res.json({
+            message:"product created"
+        })
+    }).catch((error)=>{
+        res.json({
+            message:error
         })
     })
 }
 
-export function creatProduct(req, res) {
-
-console.log(req.user)
-
-if(req.user==null){
-    res.json({
-        message:"You are not logged in"
-    } )
-    return
-}
-
-if(req.user.type!="admin"){
-    res.json({
-        message:"You are not an admin"
+export function getProducts (req,res){
+    product.find({}).then ((products)=>{
+        res.json(products)
     })
-    return
-}
-
-    const newproduct = new product(req.body)
-
-    newproduct.save()
-        .then(() => {
-            res.json({
-                message: "Product created"
-
-            })
-
-        })
-        .catch(() => {
-            res.json({
-                message: "Product not created"
-            })
-        });
-}
-
-export function deleteProduct(req, res) {
-    product.deleteOne({ name: req.params.name })
-        .then(() => {
-            res.json({
-                message: "Product deleted successfully"
-            });
-        })
-        .catch(() => {
-            res.json({
-                message: "Product not deleted"
-            });
-        });
-}
-
-export function getProductByName(req,res){
-    const name = req.params.name;
-
- product.find({ name: name }).then(
-    (productList)=>{
-        res.json({
-        list: productList
-
-        })
-    }) .catch(
-        ()=>{
-            res.jes({
-            message:"Error"    
-            })
-        })
 }
